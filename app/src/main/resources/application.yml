@@ -4,10 +4,28 @@ server:
 
 logging:
   level:
-    root: debug
+    root: info
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: bar
+        uri: http://localhost:8001
+        predicates:
+        - Path=/bar
+        filters:
+        - StripPrefix=1
+      - id: foo
+        uri: http://localhost:8002
+        predicates:
+          - Path=/foo
+        filters:
+          - StripPrefix=1
+
