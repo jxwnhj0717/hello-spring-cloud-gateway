@@ -1,0 +1,5 @@
+rootProject.name = 'hello-spring-cloud-gateway'
+include("app")
+include("foo")
+include("bar")
+
