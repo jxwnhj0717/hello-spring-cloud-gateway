@@ -27,3 +27,38 @@
 8. 扩展Predicate，GatewayFilter，GlobalFilter
 
 # 源码分析
+
+## 拦截http请求
+
+``` java
+class HttpServer.HttpServerHandle {
+  public void onStateChange(Connection connection, State newState) {
+    ...
+    HttpServerOperations ops = (HttpServerOperations) connection;
+    Mono<Void> mono = Mono.fromDirect(handler.apply(ops, ops));
+    ...
+  }
+}
+```
+
+1. handler代理给HttpWebHandlerAdapter，创建DefaultServerWebExchange
+2. HttpWebHandlerAdapter又代理给DispatcherHandler，调用SimpleHandlerAdapter处理请求
+3. SimpleHandlerAdapter调用FilteringWebHandler.handle()处理ServerWebExchange
+4. FilteringWebHandler把GatewayFilter和GlobalFilter合并，处理ServerWebExchange
+5. GlobalFilter-NettyRoutingFilter匹配http请求，在请求-响应的前后进行处理
+
+## 转发http请求
+
+```java
+class NettyRoutingFilter {
+  ...
+  Flux<HttpClientResponse> responseFlux = getHttpClient(route, exchange)
+    .headers()
+    .request()
+    .uri()
+    .send()
+    .responseConnection();
+  ...
+}
+```
+1. getHttpClient()返回的HttpClient负责转发请求
