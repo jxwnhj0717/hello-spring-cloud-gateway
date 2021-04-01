@@ -77,3 +77,5 @@ PropertiesRouteDefinitionLocator中使用GatewayProperties管理本地路由，�
 ## 通过Actuator修改路由配置
 
 参考AbstractGatewayControllerEndpoint源码，rest请求/actuator/gateway/routes/{id}可以增加/修改/删除路由配置。
+
+不过修改的路由配置在内存中，存储在InMemoryRouteDefinitionRepository，如果gateway使用集群，用配置中心的方式更合适。
