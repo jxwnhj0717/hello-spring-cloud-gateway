@@ -62,3 +62,18 @@ class NettyRoutingFilter {
 }
 ```
 1. getHttpClient()返回的HttpClient负责转发请求
+
+# 路由配置
+
+## 本地配置热更
+
+PropertiesRouteDefinitionLocator中使用GatewayProperties管理本地路由，可以定时扫描本地文件，最后修改时间变更后重新加载。参考ReloadPropertySources。
+
+## 配置中心配置
+
+1. 使用DiscoveryClientRouteDefinitionLocator
+2. 自定义RouteDefinitionLocator
+
+## 通过Actuator修改路由配置
+
+参考AbstractGatewayControllerEndpoint源码，rest请求/actuator/gateway/routes/{id}可以增加/修改/删除路由配置。
